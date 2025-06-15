@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Try-for-a-PIE</title>
+  <p>Grab a slice as soon as it appears! The more you get, the higher you score.</p>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 10px;
+      justify-content: center;
+      margin: 30px auto;
+    }
+
+    .hole {
+      width: 100px;
+      height: 100px;
+      background-color: #dd7dbb;
+      border-radius: 50%;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .mole {
+      width: 80px;
+      height: 80px;
+      background: url('assets/img/piemole.jfif') no-repeat center center / cover;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: none;
+    }
+
+    .hole.active .mole {
+      display: block;
+    }
+
+    #score {
+      font-size: 24px;
+    }
+
+    #start-button {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Try-a-PIE 🥧</h1>
+  <div id="score">Score: 0</div>
+  <button id="start-button">Start Game</button>
+
+  <div id="game-board">
+    <!-- 9 holes for moles -->
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+  </div>
+
+  <script>
+    const holes = document.querySelectorAll(".hole");
+    const scoreDisplay = document.getElementById("score");
+    const startButton = document.getElementById("start-button");
+
+    let score = 0;
+    let gameInterval;
+    let moleTimeout;
+
+    function randomHole() {
+      const index = Math.floor(Math.random() * holes.length);
+      return holes[index];
+    }
+
+    function showMole() {
+      const hole = randomHole();
+      hole.classList.add("active");
+
+      // Hide mole after 800ms
+      moleTimeout = setTimeout(() => {
+        hole.classList.remove("active");
+      }, 800);
+    }
+
+    function startGame() {
+      score = 0;
+      scoreDisplay.textContent = "Score: 0";
+      clearInterval(gameInterval);
+      clearTimeout(moleTimeout);
+
+      gameInterval = setInterval(showMole, 1000);
+
+      setTimeout(() => {
+        clearInterval(gameInterval);
+        alert("Game Over! Your score: " + score);
+      }, 20000); // game duration: 20 seconds
+    }
+
+    holes.forEach(hole => {
+      hole.addEventListener("click", () => {
+        if (hole.classList.contains("active")) {
+          score++;
+          hole.classList.remove("active");
+          scoreDisplay.textContent = "Score: " + score;
+        }
+      });
+    });
+
+    startButton.addEventListener("click", startGame);
+  </script>
+<button><a href="index.html">Back to Home</a></button>
+</body>
+</html>
